@@ -1,4 +1,5 @@
 ﻿@page "/"
+@using Nethereum.Signer
 @inject IJSRuntime jsRuntime;
 @inject IEthereumHostProvider ethereumHostProvider;
 @inject NethereumAuthenticator  nethereumAuthenticator;
@@ -25,9 +26,7 @@ else if(!isConnected)
 else
 {
     <div>
-        <button type="button" class="btn btn-primary" @onclick="async () => await GetAddr()">获取地址</button>
         <button type="button" class="btn btn-primary" @onclick="async () => await Sign()">签名</button>
-
     </div>
 }
 
@@ -59,13 +58,14 @@ else
         await ethereumHostProvider.EnableProviderAsync();
     }
 
-    async Task GetAddr()
-    {
-        
-    }
-
     async Task Sign()
     {
-        
+        var challenge = "Komen: Hello, World!";
+        var signedMessage = await ethereumHostProvider.SignMessageAsync(challenge);
+
+        Console.WriteLine("C:" + challenge);
+        Console.WriteLine("S:" + signedMessage);
+
+        new EthereumMessageSigner().EncodeUTF8AndEcRecover(challenge, signedMessage);
     }
 }

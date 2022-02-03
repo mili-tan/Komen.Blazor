@@ -10,7 +10,7 @@
 
     @if (MetamaskAvailable && string.IsNullOrEmpty(SelectedAccount))
     {
-        <button type="button" class="btn btn-light" @onclick="@EnableEthereumAsync"><img src="/_content/Nethereum.Metamask.Blazor/img/metamask-fox.svg" width="25"/> Connect Metamask</button>
+        <button type="button" class="btn btn-light" style="background-color: #fff8" @onclick="@EnableEthereumAsync"><img src="/_content/Nethereum.Metamask.Blazor/img/metamask-fox.svg" width="25"/> Connect Metamask</button>
     }
 
     @if (!MetamaskAvailable)

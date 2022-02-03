@@ -7,7 +7,7 @@
                 function (accounts) {
                     DotNet.invokeMethodAsync('Nethereum.Metamask.Blazor', 'SelectedAccountChanged', accounts[0]);
                 });
-            ethereum.on("networkChanged",
+            ethereum.on("chainChanged",
                 function (networkId) {
 
                 });
@@ -54,7 +54,7 @@
     Send: async (message) => {
         return new Promise(function (resolve, reject) {
             console.log(JSON.parse(message));
-            ethereum.send(JSON.parse(message), function (error, result) {
+            ethereum.sendAsync(JSON.parse(message), function (error, result) {
                 console.log(result);
                 console.log(error);
                 resolve(JSON.stringify(result));
@@ -67,7 +67,7 @@
             const from = ethereum.selectedAddress;
             const params = [utf8HexMsg, from];
             const method = 'personal_sign';
-            ethereum.send({
+            ethereum.sendAsync({
                 method,
                 params,
                 from,
