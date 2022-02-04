@@ -1,0 +1,84 @@
+﻿@page "/auth/{Token}"
+@using Nethereum.Signer
+@inject IJSRuntime jsRuntime;
+@inject IEthereumHostProvider ethereumHostProvider;
+@inject NethereumAuthenticator  nethereumAuthenticator;
+
+@if (!hasMeta)
+{
+    <div class="alert alert-light mt-4" role="alert">
+        <span class="oi oi-data-transfer-download mr-2" aria-hidden="true"></span>
+        <span class="text-nowrap">
+            请先连接 MetaMask，如果您还没有 MetaMask，请先安装。 
+            <a target="_blank" class="font-weight-bold" href="https://metamask.io/">获取</a>
+        </span>
+    </div>
+}
+else if(!isConnected)
+{
+    <div class="mt-2">
+        <Metamask />
+    </div>
+}
+else
+{
+
+    <div class="p-5 mb-4 bg-light">
+        <div class="container-fluid py-5">
+            <h1 class="display-4">验证</h1>
+            <p>Welcome to Komen Gateway.</p>
+            <button type="button" class="btn btn-outline-dark" 
+                    style="background-image: linear-gradient(45deg, rgba(247, 149, 51, 0.101961) 0, rgba(243, 112, 85, 0.101961) 15%, rgba(239, 78, 123, 0.101961) 30%, rgba(161, 102, 171, 0.101961) 44%, rgba(80, 115, 184, 0.101961) 58%, rgba(16, 152, 173, 0.101961) 72%, rgba(7, 179, 155, 0.101961) 86%, rgba(109, 186, 130, 0.101961) 100%);"
+                    @onclick="async () => await Sign()">签名以验证</button> 
+       </div>
+    </div>
+    }
+
+@code
+{
+    bool hasMeta;
+    bool isConnected;
+    string account = string.Empty;
+
+    [Parameter]
+    public string token { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstTime)
+    {
+        if (firstTime)
+        {
+            ethereumHostProvider.SelectedAccountChanged += EthereumHostProviderOnSelectedAccountChanged;
+            hasMeta = await ethereumHostProvider.CheckProviderAvailabilityAsync();
+            isConnected = !string.IsNullOrWhiteSpace(ethereumHostProvider.SelectedAccount);
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await ethereumHostProvider.EnableProviderAsync();
+        Console.WriteLine(token);
+    }
+
+    private async Task EthereumHostProviderOnSelectedAccountChanged(string arg)
+    {
+        isConnected = !string.IsNullOrWhiteSpace(arg);
+        account = arg;
+        StateHasChanged();
+    }
+
+    async Task Connect()
+    {
+        await ethereumHostProvider.EnableProviderAsync();
+    }
+
+    async Task Sign()
+    {
+        var challenge = "Komen: Hello, World!";
+        var signedMessage = await ethereumHostProvider.SignMessageAsync(challenge);
+
+        Console.WriteLine("C:" + challenge);
+        Console.WriteLine("S:" + signedMessage);
+
+        new EthereumMessageSigner().EncodeUTF8AndEcRecover(challenge, signedMessage);
+    }
+}
