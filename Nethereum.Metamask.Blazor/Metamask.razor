@@ -5,7 +5,7 @@
 <div>
     @if (MetamaskAvailable && !string.IsNullOrEmpty(SelectedAccount))
     {
-        @SelectedAccount
+        <small>@SelectedAccount</small>
     }
 
     @if (MetamaskAvailable && string.IsNullOrEmpty(SelectedAccount))
