@@ -4,4 +4,19 @@
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Nethereum.Metamask.Blazor\Nethereum.Metamask.Blazor.csproj" />
+    <ProjectReference Include="..\Nethereum.Metamask\Nethereum.Metamask.csproj" />
+    <ProjectReference Include="..\Nethereum.UI\Nethereum.UI.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="Pages\Index.razor">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
+    <Content Update="Shared\MainLayout.razor">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
+  </ItemGroup>
+
 </Project>

@@ -9,6 +9,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Nethereum.Metamask;
+using Nethereum.Metamask.Blazor;
+using Nethereum.UI;
 
 namespace Komen.BlazorServer
 {
@@ -27,7 +30,13 @@ namespace Komen.BlazorServer
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            services.AddSingleton<WeatherForecastService>();
+
+            services.AddScoped<IMetamaskInterop, MetamaskBlazorInterop>();
+            services.AddScoped<MetamaskInterceptor>();
+            services.AddScoped<MetamaskHostProvider>();
+            services.AddScoped<IEthereumHostProvider>(serviceProvider => serviceProvider.GetService<MetamaskHostProvider>());
+            services.AddScoped<IEthereumHostProvider, MetamaskHostProvider>();
+            services.AddScoped<NethereumAuthenticator>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
