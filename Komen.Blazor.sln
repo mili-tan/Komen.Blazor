@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nethereum.Metamask.Blazor",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nethereum.UI", "Nethereum.UI\Nethereum.UI.csproj", "{D74551F8-7C44-43F8-879C-4DFB9C11AF0B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Komen.BlazorServer", "Komen.BlazorServer\Komen.BlazorServer.csproj", "{837E9E2F-B240-461B-B28F-49F97FC3C6F5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{D74551F8-7C44-43F8-879C-4DFB9C11AF0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D74551F8-7C44-43F8-879C-4DFB9C11AF0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D74551F8-7C44-43F8-879C-4DFB9C11AF0B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{837E9E2F-B240-461B-B28F-49F97FC3C6F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{837E9E2F-B240-461B-B28F-49F97FC3C6F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{837E9E2F-B240-461B-B28F-49F97FC3C6F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{837E9E2F-B240-461B-B28F-49F97FC3C6F5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
