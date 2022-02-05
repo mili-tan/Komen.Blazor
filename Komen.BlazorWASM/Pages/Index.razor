@@ -1,8 +1,10 @@
 ﻿@page "/"
-@using Nethereum.UI
+@using JWT.Builder
+@using Nethereum.Signer
 @inject IJSRuntime jsRuntime;
 @inject IEthereumHostProvider ethereumHostProvider;
 @inject NethereumAuthenticator  nethereumAuthenticator;
+@inject NavigationManager navigation
 
 @if (!hasMeta)
 {
@@ -20,6 +22,18 @@ else if(!isConnected)
         <Metamask />
     </div>
 }
+else if(!string.IsNullOrWhiteSpace(new Uri(navigation.Uri).Query))
+{
+    <div class="p-5 my-5 mx-1 bg-light">
+        <div class="container-fluid py-5">
+            <h1 class="display-4">验证以「@act」</h1>
+            <p>您将使用 MetaMask 为「@iss」签名以完成验证。</p>
+            <button type="button" class="btn btn-outline-dark" 
+                    style="background-image: linear-gradient(45deg, rgba(247, 149, 51, 0.101961) 0, rgba(243, 112, 85, 0.101961) 15%, rgba(239, 78, 123, 0.101961) 30%, rgba(161, 102, 171, 0.101961) 44%, rgba(80, 115, 184, 0.101961) 58%, rgba(16, 152, 173, 0.101961) 72%, rgba(7, 179, 155, 0.101961) 86%, rgba(109, 186, 130, 0.101961) 100%);"
+                    @onclick="async () => await Sign()">签名以完成验证</button> 
+        </div>
+    </div>
+}
 else
 {
 
@@ -30,13 +44,17 @@ else
             @*<button type="button" class="btn btn-primary" @onclick="async () => await Sign()">签名</button>*@ 
        </div>
     </div>
-    }
+}
 
 @code
 {
     bool hasMeta;
     bool isConnected;
     string account = string.Empty;
+    string iss = string.Empty;
+    string url = string.Empty;
+    string msg = string.Empty;
+    string act = string.Empty;
 
     protected override async Task OnAfterRenderAsync(bool firstTime)
     {
@@ -54,5 +72,50 @@ else
         isConnected = !string.IsNullOrWhiteSpace(arg);
         account = arg;
         StateHasChanged();
+    }
+
+    protected override void OnInitialized()
+    {
+        if (string.IsNullOrWhiteSpace(new Uri(navigation.Uri).Query))
+        {
+            return;
+        }
+        try
+        {
+            var obj = JwtBuilder.Create()
+                .DoNotVerifySignature()
+                .Decode<IDictionary<string, string>>(new Uri(navigation.Uri).Query);
+
+            iss = obj["iss"];
+            msg = obj["msg"];
+            url = obj["url"];
+            act = obj["act"];
+        }
+        catch (Exception e)
+        {
+            navigation.NavigateTo("/", true);
+        }
+    }
+
+    async Task Sign()
+    {
+        try
+        {
+            var challenge = msg;
+            var signedMessage = await ethereumHostProvider.SignMessageAsync(challenge);
+
+            Console.WriteLine("C:" + challenge);
+            Console.WriteLine("S:" + signedMessage);
+
+            var recover = new EthereumMessageSigner().EncodeUTF8AndEcRecover(challenge, signedMessage);
+            if (recover.ToLower().Trim() == account.ToLower().Trim())
+            {
+                navigation.NavigateTo(url + "?t=komen&u=" + account.ToLower().Trim() + "&x=" + signedMessage, true);
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
     }
 }
