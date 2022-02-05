@@ -1,6 +1,5 @@
-﻿@page "/auth/{*token}"
+﻿@page "/auth"
 @using Nethereum.Signer
-@using Nethereum.UI
 @using JWT.Builder
 @inject NavigationManager navigation
 @inject IJSRuntime jsRuntime;
@@ -47,9 +46,6 @@ else
     string msg = string.Empty;
     string act = string.Empty;
 
-    [Parameter]
-    public string token { get; set; }
-
     protected override async Task OnAfterRenderAsync(bool firstTime)
     {
         if (firstTime)
@@ -69,7 +65,7 @@ else
         {
             var obj = JwtBuilder.Create()
                 .DoNotVerifySignature()
-                .Decode<IDictionary<string, string>>(token == "query" ? new Uri(navigation.Uri).Query : token);
+                .Decode<IDictionary<string, string>>(new Uri(navigation.Uri).Query);
 
             iss = obj["iss"];
             msg = obj["msg"];

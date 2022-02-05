@@ -1,7 +1,7 @@
-﻿@page "/auth/{*token}"
+﻿@page "/auth"
 @using Nethereum.Signer
-@using Nethereum.UI
 @using JWT.Builder
+@using Nethereum.UI
 @inject NavigationManager navigation
 @inject IJSRuntime jsRuntime;
 @inject IEthereumHostProvider ethereumHostProvider;
@@ -47,9 +47,6 @@ else
     string msg = string.Empty;
     string act = string.Empty;
 
-    [Parameter]
-    public string token { get; set; }
-
     protected override async Task OnAfterRenderAsync(bool firstTime)
     {
         if (firstTime)
@@ -57,7 +54,7 @@ else
             ethereumHostProvider.SelectedAccountChanged += EthereumHostProviderOnSelectedAccountChanged;
             hasMeta = await ethereumHostProvider.CheckProviderAvailabilityAsync();
             isConnected = !string.IsNullOrWhiteSpace(ethereumHostProvider.SelectedAccount);
-
+            
             await ethereumHostProvider.EnableProviderAsync();
         }
         account = ethereumHostProvider.SelectedAccount;
@@ -69,7 +66,7 @@ else
         {
             var obj = JwtBuilder.Create()
                 .DoNotVerifySignature()
-                .Decode<IDictionary<string, string>>(token == "query" ? new Uri(navigation.Uri).Query : token);
+                .Decode<IDictionary<string, string>>(new Uri(navigation.Uri).Query);
 
             iss = obj["iss"];
             msg = obj["msg"];
