@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>Komen.BlazorWASM</title>
+    <title>Komen</title>
     <base href="/" />
     <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet" />
     <link href="css/app.css" rel="stylesheet" />
@@ -20,9 +20,45 @@
         <a href="" class="reload">Reload</a>
         <a class="dismiss">🗙</a>
     </div>
-    <script src="_framework/blazor.webassembly.js"></script>
+    <script src="_framework/blazor.webassembly.js" autostart="false"></script>
     <script src="_content/Nethereum.Metamask.Blazor/NethereumMetamask.js"></script>
 
+    <script src="https://cdn.jsdelivr.net/gh/google/brotli/js/decode.js"></script>
+    <script type="module">
+        var i = 0;
+        var allResourcesBeingLoaded = [];
+        Blazor.start({
+            loadBootResource: function (type, name, defaultUri, integrity) {
+                if (type !== 'dotnetjs' && location.hostname !== 'localhost') {
+                    allResourcesBeingLoaded.push(defaultUri);
+                    return (async function () {
+                        const response = await fetch(defaultUri + '.br', { cache: 'no-cache' });
+                        if (!response.ok) {
+                            throw new Error(response.statusText);
+                        }
+                        else {
+                            i++;
+                            var total = allResourcesBeingLoaded.length;
+                            var progressbar = document.getElementById('progressbar');
+                            var progressvalue = document.getElementById('progressvalue');
+                            var value = parseInt((i * 100.0) / total);
+                            var pct = value + '%';
+                            progressbar.style.width = pct;
+                            progressvalue.innerHTML = pct;
+                            console.info(i + '/' + total + ' (' + pct + ') ' + name);
+                        }
+                        const originalResponseBuffer = await response.arrayBuffer();
+                        const originalResponseArray = new Int8Array(originalResponseBuffer);
+                        const decompressedResponseArray = BrotliDecode(originalResponseArray);
+                        const contentType = type ===
+                            'dotnetwasm' ? 'application/wasm' : 'application/octet-stream';
+                        return new Response(decompressedResponseArray,
+                            { headers: { 'content-type': contentType } });
+                    })();
+                }
+            }
+        });
+    </script>
 </body>
 
 </html>

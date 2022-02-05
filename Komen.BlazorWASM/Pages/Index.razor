@@ -45,9 +45,8 @@ else
             ethereumHostProvider.SelectedAccountChanged += EthereumHostProviderOnSelectedAccountChanged;
             hasMeta = await ethereumHostProvider.CheckProviderAvailabilityAsync();
             isConnected = !string.IsNullOrWhiteSpace(ethereumHostProvider.SelectedAccount);
+            await ethereumHostProvider.EnableProviderAsync();
         }
-
-        await ethereumHostProvider.EnableProviderAsync();
     }
 
     private async Task EthereumHostProviderOnSelectedAccountChanged(string arg)
