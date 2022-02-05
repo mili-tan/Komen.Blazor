@@ -58,6 +58,7 @@ namespace Komen.BlazorServer
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapBlazorHub();
+                endpoints.MapFallbackToPage("/auth/{token?}", "/_Host");
                 endpoints.MapFallbackToPage("/_Host");
             });
         }

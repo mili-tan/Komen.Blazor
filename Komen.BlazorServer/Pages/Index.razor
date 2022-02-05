@@ -1,5 +1,4 @@
 ﻿@page "/"
-@using Nethereum.Signer
 @using Nethereum.UI
 @inject IJSRuntime jsRuntime;
 @inject IEthereumHostProvider ethereumHostProvider;
@@ -26,8 +25,8 @@ else
 
     <div class="p-5 mb-4 bg-light">
         <div class="container-fluid py-5">
-            <h1 class="display-4">Welcome to Web3</h1>
-            <p>Welcome to Komen Gateway.</p>
+            <h1 class="display-4">Komen</h1>
+            <p>Authentication gateway to connect Web3 identity to your Web2.0 site.</p>
             @*<button type="button" class="btn btn-primary" @onclick="async () => await Sign()">签名</button>*@ 
        </div>
     </div>
@@ -56,21 +55,5 @@ else
         isConnected = !string.IsNullOrWhiteSpace(arg);
         account = arg;
         StateHasChanged();
-    }
-
-    async Task Connect()
-    {
-        await ethereumHostProvider.EnableProviderAsync();
-    }
-
-    async Task Sign()
-    {
-        var challenge = "Komen: Hello, World!";
-        var signedMessage = await ethereumHostProvider.SignMessageAsync(challenge);
-
-        Console.WriteLine("C:" + challenge);
-        Console.WriteLine("S:" + signedMessage);
-
-        new EthereumMessageSigner().EncodeUTF8AndEcRecover(challenge, signedMessage);
     }
 }

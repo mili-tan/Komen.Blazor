@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="JWT" Version="8.9.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Nethereum.Metamask.Blazor\Nethereum.Metamask.Blazor.csproj" />
     <ProjectReference Include="..\Nethereum.Metamask\Nethereum.Metamask.csproj" />
     <ProjectReference Include="..\Nethereum.UI\Nethereum.UI.csproj" />
