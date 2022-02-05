@@ -17,6 +17,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Update="vercel.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Update="wwwroot\vercel.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
