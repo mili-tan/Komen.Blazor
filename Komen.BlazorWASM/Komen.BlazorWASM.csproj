@@ -16,4 +16,10 @@
     <ProjectReference Include="..\Nethereum.Metamask\Nethereum.Metamask.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="wwwroot\vercel.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>
