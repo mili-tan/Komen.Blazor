@@ -67,11 +67,9 @@ else
     {
         try
         {
-            Console.WriteLine(token);
-
             var obj = JwtBuilder.Create()
                 .DoNotVerifySignature()
-                .Decode<IDictionary<string, string>>(token);
+                .Decode<IDictionary<string, string>>(token == "query" ? new Uri(navigation.Uri).Query : token);
 
             iss = obj["iss"];
             msg = obj["msg"];

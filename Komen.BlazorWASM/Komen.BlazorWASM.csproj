@@ -6,15 +6,22 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="JWT" Version="8.9.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.1" PrivateAssets="all" />
-    <PackageReference Include="System.Net.Http.Json" Version="6.0.2-mauipre.1.22054.8" />
-    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="9.4.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Nethereum.Metamask.Blazor\Nethereum.Metamask.Blazor.csproj" />
     <ProjectReference Include="..\Nethereum.Metamask\Nethereum.Metamask.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="Pages\Index.razor">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
+    <Content Update="Pages\Login.razor">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
   </ItemGroup>
 
 </Project>

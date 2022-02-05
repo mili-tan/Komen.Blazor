@@ -1,5 +1,8 @@
-﻿@page "/auth/{Token}"
+﻿@page "/auth/{*token}"
 @using Nethereum.Signer
+@using Nethereum.UI
+@using JWT.Builder
+@inject NavigationManager navigation
 @inject IJSRuntime jsRuntime;
 @inject IEthereumHostProvider ethereumHostProvider;
 @inject NethereumAuthenticator  nethereumAuthenticator;
@@ -25,11 +28,11 @@ else
 
     <div class="p-5 my-5 mx-1 bg-light">
         <div class="container-fluid py-5">
-            <h1 class="display-4">验证</h1>
-            <p>Welcome to Komen Gateway.</p>
+            <h1 class="display-4">验证以「@act」</h1>
+            <p>您将使用 MetaMask 为「@iss」签名以完成验证。</p>
             <button type="button" class="btn btn-outline-dark" 
                     style="background-image: linear-gradient(45deg, rgba(247, 149, 51, 0.101961) 0, rgba(243, 112, 85, 0.101961) 15%, rgba(239, 78, 123, 0.101961) 30%, rgba(161, 102, 171, 0.101961) 44%, rgba(80, 115, 184, 0.101961) 58%, rgba(16, 152, 173, 0.101961) 72%, rgba(7, 179, 155, 0.101961) 86%, rgba(109, 186, 130, 0.101961) 100%);"
-                    @onclick="async () => await Sign()">签名以验证</button> 
+                    @onclick="async () => await Sign()">签名以完成验证</button> 
        </div>
     </div>
     }
@@ -39,6 +42,10 @@ else
     bool hasMeta;
     bool isConnected;
     string account = string.Empty;
+    string iss = string.Empty;
+    string url = string.Empty;
+    string msg = string.Empty;
+    string act = string.Empty;
 
     [Parameter]
     public string token { get; set; }
@@ -51,12 +58,28 @@ else
             hasMeta = await ethereumHostProvider.CheckProviderAvailabilityAsync();
             isConnected = !string.IsNullOrWhiteSpace(ethereumHostProvider.SelectedAccount);
         }
+
+        await ethereumHostProvider.EnableProviderAsync();
+        account = ethereumHostProvider.SelectedAccount;
     }
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
-        await ethereumHostProvider.EnableProviderAsync();
-        Console.WriteLine(token);
+        try
+        {
+            var obj = JwtBuilder.Create()
+                .DoNotVerifySignature()
+                .Decode<IDictionary<string, string>>(token == "query" ? new Uri(navigation.Uri).Query : token);
+
+            iss = obj["iss"];
+            msg = obj["msg"];
+            url = obj["url"];
+            act = obj["act"];
+        }
+        catch (Exception e)
+        {
+            navigation.NavigateTo("/", true);
+        }
     }
 
     private async Task EthereumHostProviderOnSelectedAccountChanged(string arg)
@@ -66,19 +89,25 @@ else
         StateHasChanged();
     }
 
-    async Task Connect()
-    {
-        await ethereumHostProvider.EnableProviderAsync();
-    }
-
     async Task Sign()
     {
-        var challenge = "Komen: Hello, World!";
-        var signedMessage = await ethereumHostProvider.SignMessageAsync(challenge);
+        try
+        {
+            var challenge = msg;
+            var signedMessage = await ethereumHostProvider.SignMessageAsync(challenge);
 
-        Console.WriteLine("C:" + challenge);
-        Console.WriteLine("S:" + signedMessage);
+            Console.WriteLine("C:" + challenge);
+            Console.WriteLine("S:" + signedMessage);
 
-        new EthereumMessageSigner().EncodeUTF8AndEcRecover(challenge, signedMessage);
+            var recover = new EthereumMessageSigner().EncodeUTF8AndEcRecover(challenge, signedMessage);
+            if (recover.ToLower().Trim() == account.ToLower().Trim())
+            {
+                navigation.NavigateTo(url + "?t=komen&u=" + account.ToLower().Trim() + "&x=" + signedMessage, true);
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
     }
 }
