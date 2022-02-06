@@ -100,7 +100,7 @@ else
             var recover = new EthereumMessageSigner().EncodeUTF8AndEcRecover(challenge, signedMessage);
             if (recover.ToLower().Trim() == account.ToLower().Trim())
             {
-                navigation.NavigateTo(url + "?t=komen&u=" + account.ToLower().Trim() + "&x=" + signedMessage, true);
+                navigation.NavigateTo(url + "?a=komen&u=" + account.ToLower().Trim() + "&x=" + signedMessage, true);
             }
         }
         catch (Exception e)
