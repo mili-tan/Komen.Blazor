@@ -2,6 +2,8 @@
 @using Nethereum.Signer
 @using JWT.Builder
 @using Nethereum.UI
+@using System.Text
+@using Microsoft.AspNetCore.WebUtilities
 @inject NavigationManager navigation
 @inject IJSRuntime jsRuntime;
 @inject IEthereumHostProvider ethereumHostProvider;
@@ -100,7 +102,8 @@ else
             var recover = new EthereumMessageSigner().EncodeUTF8AndEcRecover(challenge, signedMessage);
             if (recover.ToLower().Trim() == account.ToLower().Trim())
             {
-                navigation.NavigateTo(url + "?t=komen&u=" + account.ToLower().Trim() + "&x=" + signedMessage, true);
+                navigation.NavigateTo(url + "?t=komen&u=" + account.ToLower().Trim() + "&x=" + signedMessage
+                                      + "&msg=" + Base64UrlTextEncoder.Encode(Encoding.UTF8.GetBytes(msg)), true);
             }
         }
         catch (Exception e)
