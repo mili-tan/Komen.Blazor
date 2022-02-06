@@ -1,6 +1,7 @@
 ﻿@page "/auth"
 @using Nethereum.Signer
 @using JWT.Builder
+@using Nethereum.UI
 @inject NavigationManager navigation
 @inject IJSRuntime jsRuntime;
 @inject IEthereumHostProvider ethereumHostProvider;
@@ -24,16 +25,18 @@ else if(!isConnected)
 }
 else
 {
+
     <div class="p-5 my-5 mx-1 bg-light">
         <div class="container-fluid py-5">
-            <h1 class="display-4">验证以「@act」</h1>
-            <p>您将使用 MetaMask 为「@iss」签名以完成验证。</p>
-            <button type="button" class="btn btn-outline-dark" 
+            <h1 class="display-4 monoton">KOMEN</h1>
+            <h2>验证以「@act」</h2>
+            <p>您将使用 Ethereum 签名为「@iss」完成验证。</p>
+            <button type="button" class="btn btn-outline-dark"
                     style="background-image: linear-gradient(45deg, rgba(247, 149, 51, 0.101961) 0, rgba(243, 112, 85, 0.101961) 15%, rgba(239, 78, 123, 0.101961) 30%, rgba(161, 102, 171, 0.101961) 44%, rgba(80, 115, 184, 0.101961) 58%, rgba(16, 152, 173, 0.101961) 72%, rgba(7, 179, 155, 0.101961) 86%, rgba(109, 186, 130, 0.101961) 100%);"
-                    @onclick="async () => await Sign()">签名以完成验证</button> 
-       </div>
+                    @onclick="async () => await Sign()">签名以完成验证</button>
+        </div>
     </div>
-}
+    }
 
 @code
 {
