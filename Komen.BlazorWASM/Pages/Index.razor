@@ -87,8 +87,6 @@ else
         try
         {
             var obj = JwtBuilder.Create()
-                .WithAlgorithm(new HMACSHA256Algorithm())
-                .WithSecret("Komen")
                 .DoNotVerifySignature()
                 .Decode<IDictionary<string, string>>(new Uri(navigation.Uri).Query.Trim('?'));
 
