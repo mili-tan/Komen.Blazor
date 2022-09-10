@@ -2,6 +2,7 @@
 @using JWT.Builder
 @using Nethereum.Signer
 @using System.Text
+@using JWT.Algorithms
 @using Microsoft.AspNetCore.WebUtilities
 @inject IJSRuntime jsRuntime;
 @inject IEthereumHostProvider ethereumHostProvider;
@@ -86,6 +87,7 @@ else
         try
         {
             var obj = JwtBuilder.Create()
+                .WithAlgorithm(new HMACSHA256Algorithm())
                 .DoNotVerifySignature()
                 .Decode<IDictionary<string, string>>(new Uri(navigation.Uri).Query);
 
