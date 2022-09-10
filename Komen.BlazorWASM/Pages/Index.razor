@@ -90,7 +90,7 @@ else
                 .WithAlgorithm(new HMACSHA256Algorithm())
                 .WithSecret("Komen")
                 .DoNotVerifySignature()
-                .Decode<IDictionary<string, string>>(new Uri(navigation.Uri).Query);
+                .Decode<IDictionary<string, string>>(new Uri(navigation.Uri).Query.Trim('?'));
 
             iss = obj["iss"];
             msg = obj["msg"];
